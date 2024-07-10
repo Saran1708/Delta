@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskWiseTrading</title>
+
+    <link  href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <div class="top"> 
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}">
+                    <h2><span class="danger">Risk</span><span class="succes">Wise</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="#" class="active">
+                    <span class="material-icons-sharp">grid_view</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="{{ url_for('generate_token_page') }}">
+                    <span class="material-icons-sharp">token</span>
+                    <h3>Access Token</h3>
+                </a>
+                <a href="{{ url_for('delta_calculator') }}">
+                    <span class="material-icons-sharp">candlestick_chart</span>
+                    <h3>Delta Calculator</h3>
+                </a>
+                <a href="{{ url_for('stop_loss_calculator') }}">
+                    <span class="material-icons-sharp">warning</span>
+                    <h3>Stop Loss Calculator</h3>
+                </a>
+                
+                <a href="{{ url_for('position_sizing_calculator') }}">
+                    <span class="material-icons-sharp">production_quantity_limits</span>
+                    <h3>Quantity Calculator</h3>
+                </a>
+
+                <a href="#">
+                    <span class="material-icons-sharp">query_stats</span>
+                    <h3>Trade Analysis</h3>
+                </a>
+                
+                <a href="#">
+                    <span class="material-icons-sharp">hiking</span>
+                    <h3>Backtesting Tools</h3>
+                </a>
+
+                <a href="#">
+                    <span class="material-icons-sharp">show_chart</span>
+                    <h3>Option Simulator</h3>
+                </a>
+
+                <a href="#">
+                    <span class="material-icons-sharp">smart_toy</span>
+                    <h3>Algo Trading</h3>
+                </a>
+
+                <a href="{{ url_for('logout') }}">
+                    <span class="material-icons-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <main>
+            <h1>Dashboard</h1>
+            <div class="insights">
+                <div id="delta-calculator" class="delta">
+                    <span class="material-icons-sharp">candlestick_chart</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h2>Delta Calculator</h2>
+                        </div>
+                    </div>
+                    <small class="text-muted">Real Time Delta Value</small>
+                </div>
+
+                <div id="stop-loss-calculator" class="sl">
+                    <span class="material-icons-sharp">warning</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h2>Stop Loss Calculator</h2>
+                        </div>
+                    </div>
+                    <small class="text-muted"> Option Stop loss Calculator </small>
+                </div>
+
+                <div id="position-sizing-calculator" class="ps">
+                    <span class="material-icons-sharp"> production_quantity_limits</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h2>Quantity Calculator</h2>
+                        </div>
+                    </div>
+                    <small class="text-muted">With Live Broker Execution</small>
+                </div>
+            </div>
+            <div class="tradingview-widget-container">
+                <div id="tradingview_79df7"></div>
+                <div class="tradingview-widget-copyright">
+                    <a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a>
+                </div>
+                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+            </div>
+        </main>
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-icons-sharp active">light_mode</span>
+                    <span class="material-icons-sharp">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="info">
+                        <p>Hey, Trader </t><b>{{ session.name }}</b></p>
+                        <small class="text-muted">Welcome ! </small>
+                    </div>
+                    <div class="profile-photo">    
+                        <span class="material-icons-sharp"> person</span>
+                    </div>
+                </div>
+            </div>
+            <div class="analytics">
+                <div class="item">
+                    <div class="icon">
+                        <span class="material-icons-sharp">leaderboard</span>
+                    </div>      
+                    <div class="right">
+                        <div class="info">
+                            <h3>NIFTY 50</h3>
+                        </div>
+                        <h3 id="nifty-change" class="succes"></h3>
+                        <h3 id="nifty-price"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="analytics">
+                <h2>NIFTY Gainers</h2>
+                <div id="gainers"></div>
+            </div>
+            <div class="analytics">
+                <h2>NIFTY Losers</h2>
+                <div id="losers"></div>
+            </div>     
+        </div>
+    </div> 
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script>
+        async function fetchData() {
+            const response = await fetch('/api/data');
+            const data = await response.json();
+
+            const nifty = data.nifty;
+            const niftyChangeElement = document.getElementById('nifty-change');
+            const niftyPriceElement = document.getElementById('nifty-price');
+
+            niftyChangeElement.textContent = nifty.pChange + '%';
+            niftyPriceElement.textContent = nifty.lastPrice;
+
+            if (nifty.pChange < 0) {
+                niftyChangeElement.classList.remove('succes');
+                niftyChangeElement.classList.add('danger');
+            } else {
+                niftyChangeElement.classList.remove('danger');
+                niftyChangeElement.classList.add('succes');
+            }
+
+            const gainersContainer = document.getElementById('gainers');
+            const losersContainer = document.getElementById('losers');
+
+            data.gainers.forEach(gainer => {
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.innerHTML = `
+                    <div class="icon1">
+                        <span class="material-icons-sharp">trending_up</span>
+                    </div>      
+                    <div class="right">
+                        <div class="info">
+                            <h3>${gainer['Column1.symbol']}</h3>
+                        </div>
+                        <h3 class="succes">+${gainer['Column1.pChange']}%</h3>
+                        <h3>${gainer['Column1.lastPrice']}</h3>
+                    </div>
+                `;
+                gainersContainer.appendChild(item);
+            });
+
+            data.losers.forEach(loser => {
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.innerHTML = `
+                    <div class="icon2">
+                        <span class="material-icons-sharp">trending_down</span>
+                    </div>      
+                    <div class="right">
+                        <div class="info">
+                            <h3>${loser['Column1.symbol']}</h3>
+                        </div>
+                        <h3 class="danger">${loser['Column1.pChange']}%</h3>
+                        <h3>${loser['Column1.lastPrice']}</h3>
+                    </div>
+                `;
+                losersContainer.appendChild(item);
+            });
+        }
+
+        fetchData();
+    </script>
+    <script>
+        document.getElementById("delta-calculator").onclick = function() {
+            window.location.href = "{{ url_for('delta_calculator') }}";
+        };
+    </script>
+    <script>
+        document.getElementById("stop-loss-calculator").onclick = function() {
+            window.location.href = "{{ url_for('stop_loss_calculator') }}";
+        };
+    </script>
+    <script>
+        document.getElementById("position-sizing-calculator").onclick = function() {
+            window.location.href = "{{ url_for('position_sizing_calculator') }}";
+        };
+    </script>
+</body>
+</html>

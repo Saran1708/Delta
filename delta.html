@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskWiseTrading</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/delta.css') }}">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <div class="top"> 
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}">
+                    <h2><span class="danger">Risk</span><span class="succes">Wise</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="{{ url_for('index') }}" >
+                    <span class="material-icons-sharp">grid_view</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="{{ url_for('generate_token_page') }}">
+                    <span class="material-icons-sharp">token</span>
+                    <h3>Access Token</h3>
+                </a>
+                <a href="#" class="active">
+                    <span class="material-icons-sharp">candlestick_chart</span>
+                    <h3>Delta Calculator</h3>
+                </a>
+                <a href="{{ url_for('stop_loss_calculator') }}">
+                    <span class="material-icons-sharp">warning</span>
+                    <h3>Stop Loss Calculator</h3>
+                </a>
+                <a href="{{ url_for('position_sizing_calculator') }}">
+                    <span class="material-icons-sharp">production_quantity_limits</span>
+                    <h3>Quantity Calculator</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">query_stats</span>
+                    <h3>Trade Analysis</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">hiking</span>
+                    <h3>Backtesting Tools</h3>
+                </a>
+
+                <a href="#">
+                    <span class="material-icons-sharp">show_chart</span>
+                    <h3>Option Simulator</h3>
+                </a>
+
+                <a href="#">
+                    <span class="material-icons-sharp">smart_toy</span>
+                    <h3>Algo Trading</h3>
+                </a>
+                <a href="{{ url_for('logout') }}">
+                    <span class="material-icons-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <main>
+        <div>   
+            <div class="delta-calculator">
+                <h1>Delta Calculator</h1></br></br>
+                <form method="post" action="/delta_calculator">
+                    <div class="form-group">
+                        <label for="instrument">Select Instrument:</label>
+                        <select id="instrument" name="instrument" onchange="updateAllTextBoxes()">
+                            <option value="Nifty">Nifty</option>
+                            <option value="BankNifty">BankNifty</option>
+                            <option value="Finfity">Finfity</option>
+                            <option value="MidcapNifty">MidcapNifty</option>
+                            <option value="Sensex">Sensex</option>
+                        </select>
+                    </div>
+                    </br>
+                    <div class="form-group">
+                        <label for="contract">Contract:</label>
+                        <select id="contract" name="contract" onchange="updateDates()">
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                    </br>
+                    <div class="form-group">
+                        <label for="date">Select Expiry:</label>
+                        <select id="date" name="date">
+                            <!-- Dates will be dynamically added here using JavaScript -->
+                        </select>
+                    </div>
+                    </br>
+                    <div class="form-group">
+                        <label for="strikePrice">Select Strike Price:</label>
+                        <select id="strikePrice" name="strikePrice">
+                            <!-- Strike prices will be dynamically added here using JavaScript -->
+                        </select>
+                    </div>
+                    </br>
+                    <div class="form-group">
+                        <label for="optionType">Select Option Type:</label>
+                        <select id="optionType" name="optionType">
+                            <option value="CE">CE</option>
+                            <option value="PE">PE</option>
+                        </select>
+                    </div>
+                    </br>
+                    <div class="form-group button-group">
+                        <button type="submit">Calculate Delta</button>
+                    </div>
+                    {% if delta %}
+                    <h5><p>{{instrument}} {{strike_price}} {{option_type}}</p></h5>
+                    <h3><p>Delta is: {{ delta }}</p></h3>
+                    {% endif %}
+                </form>             
+            </div>
+        </div>     
+        </main>
+    </div> 
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Set default contract type to "weekly"
+            var contractSelect = document.getElementById("contract");
+            contractSelect.value = "weekly";
+
+            // Update dates and strike prices based on default contract type
+            updateDates();
+            updateStrikePrices();
+        });
+        function updateAllTextBoxes() {
+            updateDates();
+            updateStrikePrices();
+            instrumentSelect.value = instrumentSelect.options[instrumentSelect.selectedIndex].value;
+        }
+        function updateDates() {
+            var instrumentSelect = document.getElementById("instrument");
+            var dateSelect = document.getElementById("date");
+            var contractSelect = document.getElementById("contract");
+
+            // Clear previous options
+            dateSelect.innerHTML = "";
+
+            // Add options based on the selected instrument and contract
+            switch (instrumentSelect.value) {
+                case "Nifty":
+                    if (contractSelect.value === "weekly") {
+                        addDates(["2024-07-04", "2024-06-20"]);
+                    } else if (contractSelect.value === "monthly") {
+                        addDates(["2024-06-27"]);
+                    }
+                    break;
+
+                case "BankNifty":
+                    if (contractSelect.value === "weekly") {
+                        addDates(["2024-07-10", "2024-06-19"]);
+                    } else if (contractSelect.value === "monthly") {
+                        addDates(["2024-06-26"]);
+                    }
+                    break;
+
+                case "Finfity":
+                    if (contractSelect.value === "weekly") {
+                        addDates(["2024-06-11", "2024-06-18"]);
+                    } else if (contractSelect.value === "monthly") {
+                        addDates(["2024-06-25"]);
+                    }
+                    break;
+
+                case "MidcapNifty":
+                    if (contractSelect.value === "weekly") {
+                        addDates(["2024-06-10", "2024-06-24"]);
+                    } else if (contractSelect.value === "monthly") {
+                        addDates(["2024-06-24"]);
+                    }
+                    break;
+
+                case "Sensex":
+                    if (contractSelect.value === "weekly") {
+                        addDates(["2024-06-14", "2024-06-21"]);
+                    } else if (contractSelect.value === "monthly") {
+                        addDates(["2024-06-28"]);
+                    }
+                    break;
+            }
+
+            // Set the default date to the first one
+            dateSelect.selectedIndex = 0;
+        }
+
+        function addDates(dates) {
+            var dateSelect = document.getElementById("date");
+            for (var i = 0; i < dates.length; i++) {
+                var option = document.createElement("option");
+                option.text = dates[i];
+                option.value = dates[i];
+                dateSelect.add(option);
+            }
+        }
+        function updateStrikePrices() {
+            var instrumentSelect = document.getElementById("instrument");
+            var strikePriceSelect = document.getElementById("strikePrice");
+
+            // Clear previous options
+            strikePriceSelect.innerHTML = "";
+
+            // Add strike prices based on the selected instrument
+            switch (instrumentSelect.value) {
+                case "Nifty":
+                    addStrikePrices(24000, 25000, 50);
+                    break;
+                case "BankNifty":
+                    addStrikePrices(49000, 53000, 100);
+                    break;
+                case "Finfity":
+                    addStrikePrices(20000, 23500, 50);
+                    break;
+                case "MidcapNifty":
+                    addStrikePrices(11000, 12000, 25);
+                    break;
+                case "Sensex":
+                    addStrikePrices(76000, 79000, 100);
+                    break;
+            }
+
+            // Set the default strike price to the first one
+            strikePriceSelect.selectedIndex = 0;
+        }
+        function addStrikePrices(start, end, step) {
+            var strikePriceSelect = document.getElementById("strikePrice");
+            for (var i = start; i <= end; i += step) {
+                var option = document.createElement("option");
+                option.text = i;
+                option.value = i;
+                strikePriceSelect.add(option);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskWiseTrading</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ps.css') }}">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <div class="top"> 
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}">
+                    <h2><span class="danger">Risk</span><span class="succes">Wise</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="{{ url_for('index') }}" >
+                    <span class="material-icons-sharp">grid_view</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="{{ url_for('generate_token_page') }}">
+                    <span class="material-icons-sharp">token</span>
+                    <h3>Access Token</h3>
+                </a>
+                <a href="{{ url_for('delta_calculator') }}" >
+                    <span class="material-icons-sharp">candlestick_chart</span>
+                    <h3>Delta Calculator</h3>
+                </a>
+                <a href="{{ url_for('stop_loss_calculator') }}">
+                    <span class="material-icons-sharp">warning</span>
+                    <h3>Stop Loss Calculator</h3>
+                </a>
+                <a href="#" class="active">
+                    <span class="material-icons-sharp">production_quantity_limits</span>
+                    <h3>Quantity Calculator</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">query_stats</span>
+                    <h3>Trade Analysis</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">hiking</span>
+                    <h3>Backtesting Tools</h3>
+                </a>
+
+                <a href="#">
+                    <span class="material-icons-sharp">show_chart</span>
+                    <h3>Option Simulator</h3>
+                </a>
+
+                <a href="#">
+                    <span class="material-icons-sharp">smart_toy</span>
+                    <h3>Algo Trading</h3>
+                </a>
+                
+                <a href="{{ url_for('logout') }}">
+                    <span class="material-icons-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <main>
+        <div>   
+            <div class="position-sizing-calculator">
+                <h1>Quantity Calculator</h1>
+                <br>
+
+                <!-- The form for input fields -->
+                <form id="quantityForm" action="">
+                    <!-- Input field for total capital -->
+                    <div class="form-group">
+                        <label for="totalCapital">Total Capital:</label>
+                        <input type="number" name="totalCapital" id="totalCapital" required>
+                    </div>
+                    <br>
+                    <!-- Add other input fields as needed -->
+                    <div class="form-group">
+                        <label for="risk">Risk Percentage:</label>
+                        <input type="number" name="risk" id="risk" required>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="instrument">Instrument:</label>
+                        <select name="symbol" id="instrument" required>
+                            <option value="NSE:IDEA-EQ">IDEA</option>
+                            <option value="NSE:YESBANK-EQ">YESBANK</option>
+                            <option value="NSE:SOUTHBANK-EQ">SOUTH INDIAN BANK</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="transactionType">Transaction Type:</label>
+                        <select name="transactionType" id="transactionType" onchange="toggleBuySell()" required>
+                            <option value="">Select</option>
+                            <option value="buy">Buy</option>
+                            <option value="sell">Sell</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div id="buyValueInput" class="form-group buy-value" style="display: none;">
+                        <label for="buyValue">Buy Value:</label>
+                        <input type="number" name="buyValue" id="buyValue">
+                    </div>
+                    <div id="sellValueInput" class="form-group sell-value" style="display: none;">
+                        <label for="sellValue">Sell Value:</label>
+                        <input type="number" name="sellValue" id="sellValue">
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="stoplossValue">Stop Loss Value:</label>
+                        <input type="number" name="stoplossValue" id="stoplossValue" required>
+                    </div>
+
+                    <!-- Button to calculate quantity -->
+                    <button type="button" onclick="calculateQuantity()">Calculate Quantity</button>
+                    <!-- Button to execute order (hidden by default) -->
+                    <center>
+                        <button id="executeBtn" class="execute-btn" style="display: none;" onclick="executeOrder()">Execute Position</button>
+                    </center>
+                </form>
+                <!-- Display the calculated quantity here -->
+                <center><b id="calculatedQuantity"></b></center>
+                
+            </div>
+        </div>  
+        </main>
+    </div> 
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script>
+        function toggleBuySell() {
+        var transactionType = document.getElementById('transactionType').value;
+        var buyValueInput = document.getElementById('buyValueInput');
+        var sellValueInput = document.getElementById('sellValueInput');
+        if (transactionType === 'buy') {
+            buyValueInput.style.display = 'flex'; /* Change to flex to display in row */
+            sellValueInput.style.display = 'none';
+        } else if (transactionType === 'sell') {
+            buyValueInput.style.display = 'none';
+            sellValueInput.style.display = 'flex'; /* Change to flex to display in row */
+        } else {
+            buyValueInput.style.display = 'none';
+            sellValueInput.style.display = 'none';
+        }
+        }
+
+        function calculateQuantity() {
+        var totalCapital = parseFloat(document.getElementById('totalCapital').value);
+        var risk = parseFloat(document.getElementById('risk').value);
+        var buyValue = parseFloat(document.getElementById('buyValue').value) || 0;
+        var sellValue = parseFloat(document.getElementById('sellValue').value) || 0;
+        var stoplossValue = parseFloat(document.getElementById('stoplossValue').value);
+        var transactionType = document.getElementById('transactionType').value;
+
+        // Validate input values
+        if (!transactionType || isNaN(totalCapital) || isNaN(risk) || isNaN(stoplossValue)) {
+            alert("Please enter valid values in all fields! ");
+            return;
+        }
+
+        // Calculate quantity
+        var quantity;
+
+        if (transactionType === 'buy') {
+            if (isNaN(buyValue) || stoplossValue >= buyValue) {
+                alert("Stop loss should be less than buy value");
+                return;
+            }
+            quantity = (totalCapital * (risk / 100)) / (buyValue - stoplossValue);
+        } else if (transactionType === 'sell') {
+            if (isNaN(sellValue) || stoplossValue <= sellValue) {
+                alert("Stop loss should be higher than sell value");
+                return;
+            }
+            quantity = (totalCapital * (risk / 100)) / (stoplossValue - sellValue);
+        }
+
+        // Display the calculated quantity
+        document.getElementById('calculatedQuantity').innerHTML = "Quantity: " + Math.floor(quantity);
+
+        // Show the "Execute Position" button after calculating quantity
+        document.getElementById('executeBtn').style.display = 'block';
+
+        }
+
+        function executeOrder() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/execute", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            // Get form data
+            var totalCapital = parseFloat(document.getElementById('totalCapital').value);
+            var risk = parseFloat(document.getElementById('risk').value);
+            var buyValue = parseFloat(document.getElementById('buyValue').value) || 0;
+            var sellValue = parseFloat(document.getElementById('sellValue').value) || 0;
+            var stoplossValue = parseFloat(document.getElementById('stoplossValue').value);
+            var transactionType = document.getElementById('transactionType').value;
+            var instrument = document.getElementById('instrument').value;
+            var quantity = parseFloat(document.getElementById('calculatedQuantity').innerText.split(": ")[1]); // Get calculated quantity from the display
+
+             // Validate input values
+            if (!transactionType || isNaN(totalCapital) || isNaN(risk) || isNaN(stoplossValue)) {
+                alert("Please enter valid values in all fields! ");
+                return;
+            }
+
+    // Create payload object
+            var payload = {
+                totalCapital: totalCapital,
+                risk: risk,
+                buyValue: buyValue,
+                sellValue: sellValue,
+                stoplossValue: stoplossValue,
+                transactionType: transactionType,
+                instrument: instrument,
+                quantity: quantity
+            };
+
+            function handleResponse(response) {
+            if (response.status === "success") {
+                alert("Order executed successfully!");
+            } else {
+                alert("Error executing order: " + response.message);
+            }
+            }
+
+            xhr.onreadystatechange = function ()  {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    handleResponse(response); // Call the handleResponse function
+                } else {
+                alert("Error executing order: " + xhr.statusText);
+                }
+                }
+            };
+
+            // Send payload to the backend
+            xhr.send(JSON.stringify(payload));
+        }
+    </script>
+</body>
+</html>

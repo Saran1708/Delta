@@ -1,0 +1,1408 @@
+index.html 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskWiseTrading</title>
+
+    <link  href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <div class="top"> 
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}">
+                    <h2>Risk Wise <span class="danger"> Trading</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="#" class="active">
+                    <span class="material-icons-sharp">grid_view</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="#" >
+                    <span class="material-icons-sharp">token</span>
+                    <h3>Access Token</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">candlestick_chart</span>
+                    <h3>Delta Calculator</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">warning</span>
+                    <h3>Stop Loss Calculator</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">production_quantity_limits</span>
+                    <h3>Quantity Calculator</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">query_stats</span>
+                    <h3>Trade Analysis</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">manage_search</span>
+                    <h3>Option Chain Analysis</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">hiking</span>
+                    <h3>Backtesting Tools</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">smart_toy</span>
+                    <h3>Algo Trading</h3>
+                </a><a href="#">
+                    <span class="material-icons-sharp">waterfall_chart</span>
+                    <h3>Stock Screener</h3>
+                </a>
+                <a href="{{ url_for('logout') }}">
+                    <span class="material-icons-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <main>
+            <h1>Dashboard</h1>
+            <div class="insights">
+                <div class="delta">
+                    <span class="material-icons-sharp">candlestick_chart</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h2>Delta Calculator</h2>
+                        </div>
+                    </div>
+                    <small class="text-muted">Real Time Delta Value</small>
+                </div>
+
+                <div class="sl">
+                    <span class="material-icons-sharp">warning</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h2>Stop Loss Calculator</h2>
+                        </div>
+                    </div>
+                    <small class="text-muted"> Option Stop loss Calculator </small>
+                </div>
+
+                <div class="ps">
+                    <span class="material-icons-sharp"> production_quantity_limits</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h2>Quantity Calculator</h2>
+                        </div>
+                    </div>
+                    <small class="text-muted">With Live Broker Execution</small>
+                </div>
+            </div>
+            <div class="tradingview-widget-container">
+                <div id="tradingview_79df7"></div>
+                <div class="tradingview-widget-copyright">
+                    <a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a>
+                </div>
+                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                <script type="text/javascript">
+                new TradingView.widget(
+                {
+                    "width": "100%",
+                    "height": 532,
+                    "symbol": "BINANCE:BTCUSDT",
+                    "timezone": "Asia/Kolkata",
+                    "theme": "light",
+                    "interval": "D",
+                    "style": "1",
+                    "locale": "en",
+                    "toolbar_bg": "#f1f3f6",
+                    "enable_publishing": false,
+                    "hide_side_toolbar": true,
+                    "allow_symbol_change": true,
+                    "container_id": "tradingview_79df7"
+                }
+                );
+                </script>
+            </div>
+        </main>
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-icons-sharp active">light_mode</span>
+                    <span class="material-icons-sharp">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="info">
+                        <p>Hey, Trader </t><b>{{ session.name }}</b></p>
+                        <small class="text-muted">Welcome ! </small>
+                    </div>
+                    <div class="profile-photo">    
+                        <span class="material-icons-sharp"> person</span>
+                    </div>
+                </div>
+            </div>
+            <div class="analytics">
+                <div class="item">
+                    <div class="icon">
+                        <span class="material-icons-sharp">leaderboard</span>
+                    </div>      
+                    <div class="right">
+                        <div class="info">
+                            <h3>NIFTY 50</h3>
+                        </div>
+                        <h3 id="nifty-change" class="succes"></h3>
+                        <h3 id="nifty-price"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="analytics">
+                <h2>NIFTY Gainers</h2>
+                <div id="gainers"></div>
+            </div>
+            <div class="analytics">
+                <h2>NIFTY Losers</h2>
+                <div id="losers"></div>
+            </div>     
+        </div>
+    </div> 
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script>
+        async function fetchData() {
+            const response = await fetch('/api/data');
+            const data = await response.json();
+
+            const nifty = data.nifty;
+            const niftyChangeElement = document.getElementById('nifty-change');
+            const niftyPriceElement = document.getElementById('nifty-price');
+
+            niftyChangeElement.textContent = nifty.pChange + '%';
+            niftyPriceElement.textContent = nifty.lastPrice;
+
+            if (nifty.pChange < 0) {
+                niftyChangeElement.classList.remove('succes');
+                niftyChangeElement.classList.add('danger');
+            } else {
+                niftyChangeElement.classList.remove('danger');
+                niftyChangeElement.classList.add('succes');
+            }
+
+            const gainersContainer = document.getElementById('gainers');
+            const losersContainer = document.getElementById('losers');
+
+            data.gainers.forEach(gainer => {
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.innerHTML = `
+                    <div class="icon1">
+                        <span class="material-icons-sharp">trending_up</span>
+                    </div>      
+                    <div class="right">
+                        <div class="info">
+                            <h3>${gainer['Column1.symbol']}</h3>
+                        </div>
+                        <h3 class="succes">+${gainer['Column1.pChange']}%</h3>
+                        <h3>${gainer['Column1.lastPrice']}</h3>
+                    </div>
+                `;
+                gainersContainer.appendChild(item);
+            });
+
+            data.losers.forEach(loser => {
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.innerHTML = `
+                    <div class="icon2">
+                        <span class="material-icons-sharp">trending_down</span>
+                    </div>      
+                    <div class="right">
+                        <div class="info">
+                            <h3>${loser['Column1.symbol']}</h3>
+                        </div>
+                        <h3 class="danger">${loser['Column1.pChange']}%</h3>
+                        <h3>${loser['Column1.lastPrice']}</h3>
+                    </div>
+                `;
+                losersContainer.appendChild(item);
+            });
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
+
+style.css
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+
+:root{
+    --color-primary: #7380ec;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #363949;
+    --color-light: rgba(132,139,200,0.18);
+    --color-primary-variant: #111e88;
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+.dark-theme-variables {
+    --color-background: #181a1e;
+    --color-white: #202528;
+    --color-dark: #edeffd;
+    --color-dark-variant: #a3bdcc;
+    --color-light: rgba(0, 0, 0, 0.4);
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    appearance: none;
+    border: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 14px;
+}
+
+body{
+    width: 100vw;
+    height: 100vh;
+    font-family: poppins, sans-serif;
+    font-size: 0.88rem;
+    background: var(--color-background);
+    user-select: none;
+    overflow-x: hidden;
+    color: var(--color-dark);
+}
+
+.container{
+    display: grid;
+    width: 96%;
+    margin: 0 auto;
+    gap: 1.8rem;
+    grid-template-columns: 14rem auto 21rem;
+}
+
+a{
+    color: var(--color-dark);
+}
+
+img{
+    display: block;
+    width: 100%;
+}
+
+h2{
+    font-size: 1.4rem;
+}
+
+h3{
+    font-size: 0.87rem;
+}
+
+h4{
+    font-size: 0.8rem;
+}
+
+h5{
+    font-size: 0.77rem;
+}
+
+small{
+    font-size: 0.75rem;
+}
+
+.profile-photo{
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.text-muted{
+    color: var(--color-info-dark);
+}
+
+p{
+    color: var(--color-dark-variant);
+}
+
+b{
+    color: var(--color-dark);
+}
+
+.primary{
+    color: var(--color-primary);
+}
+
+.danger{
+    color: var(--color-danger);
+}
+
+.succes{
+    color: var(--color-success);
+}
+
+.warning{
+    color: var(--color-warning);
+}
+
+aside{
+    height: 100vh;
+
+}
+
+aside .top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.4rem;
+}
+
+aside .logo{
+    display: flex;
+    gap: 0.8rem;
+}
+
+aside .logo img{
+    margin-top: 1rem;
+    width: 2rem;
+    height: 2rem;
+}
+
+aside .close{
+    display: none;
+}
+
+aside .sidebar{
+    display: flex;
+    flex-direction: column;
+    height: 86vh;
+    position: relative;
+    top: 3rem;
+}
+
+aside h3{
+    font-weight: 500;
+}
+
+aside .sidebar a {
+    display: flex;
+    color: var(--color-info-dark);
+    margin-left: 1rem;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    height: 3.7rem;
+    transition: all 300ms ease;
+}
+
+aside .sidebar a span{
+    font-size: 1.6rem;
+    transition: all 300ms ease;
+}
+
+aside .sidebar a:last-child{
+    position: absolute;
+    bottom: 2rem;
+    width: 100%;
+}
+
+aside .sidebar a.active{
+    background: var(--color-light);
+    color: var(--color-primary);
+    margin-left: 0;
+}
+
+aside .sidebar a.active:before{
+    content: "";
+    width: 6px;
+    height: 100%;
+    background: var(--color-primary);
+}
+
+aside .sidebar a.active span{
+    color: var(--color-primary);
+    margin-left: calc(1rem - 3px);
+}
+
+aside .sidebar a:hover{
+    color: var(--color-primary);
+}
+
+aside .sidebar a:hover span{
+    margin-left: 1rem;
+}
+
+main{
+    margin-top: 1.4rem;
+}
+
+main .insights{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+}
+
+main .insights > div{
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    margin-top: 1rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+
+main .insights > div:hover{
+    box-shadow: none;
+}
+
+main .insights > div span{
+    background: var(--color-primary);
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: var(--color-white);
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+}
+
+main .insights > div.sl span{
+    background: var(--color-danger);
+}
+
+main .insights > div.ps span{
+    background: var(--color-success);
+}
+
+main .insights > div .middle{
+    display:flex ;
+    align-items: center;
+    justify-content: space-between;
+}
+
+main .insights h2{
+    margin-bottom: 1rem;
+}
+
+main .tradingview-widget-container{
+    margin-top: 1rem;
+}
+
+main .tradingview-widget-container h2{
+    margin-bottom: 0.8rem;
+}
+
+main .tradingview-widget-container {
+    background: var(--color-white);
+    width: 100%;
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+
+main .tradingview-widget-container:hover{
+    box-shadow: none;
+}
+
+.right{
+    margin-top: 1.4rem;
+}
+
+.right .top{
+    display: flex;
+    justify-content: end;
+    gap: 3rem;
+}
+
+.right .top button{
+    display: none;
+}
+
+.right .theme-toggler{
+    background: var(--color-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 1.6rem;
+    width: 4.2rem;
+    cursor: pointer;
+    border-radius: var(--border-radius-1);
+}
+
+.right .theme-toggler span{
+    font-size: 1.2rem;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.right .theme-toggler span.active{
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--border-radius-1);
+}
+
+.right .top .profile{
+    display: flex;
+    gap: 1rem;
+    text-align: right;
+}
+
+
+
+.right .analytics{
+    margin-top: 2rem;
+}
+
+.right .analytics h2{
+    margin-bottom: 0.8rem;
+}
+
+.right .analytics .item{
+    background: var(--color-white);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+    padding: 1.4rem var(--card-padding);
+    border-radius: var(--border-radius-3);
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+
+.right .analytics .item:hover{
+    box-shadow: none;
+}
+
+.right .analytics .item .right{
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin: 0;
+    width: 100%;
+    font-weight: 800;
+}
+
+.right .analytics .item .icon{
+    padding: 0.6rem;
+    color: var(--color-white);
+    border-radius: 50%;
+    background: var(--color-primary);
+    display: flex;
+}
+
+.right .analytics .item .icon1{
+    padding: 0.6rem;
+    color: var(--color-white);
+    border-radius: 50%;
+    background: var(--color-success);
+    display: flex;
+}
+
+.right .analytics .item .icon2{
+    padding: 0.6rem;
+    color: var(--color-white);
+    border-radius: 50%;
+    background: var(--color-danger);
+    display: flex;
+}
+
+app.py 
+
+from flask import Flask, jsonify, render_template, request, redirect, url_for, session
+from flask_mysqldb import MySQL
+import MySQLdb.cursors
+import re
+from fyers_apiv3 import fyersModel
+from selenium import webdriver
+import time
+import os
+import pandas as pd
+import datetime as dt
+
+app = Flask(__name__)
+
+client_id = "8BCSF49KKK-100"
+secret_key = "VD97YTGX6B"
+redirect_uri = "https://www.google.com/"
+response_type = "code"
+state = "sample_state"
+
+app.secret_key = 'abcxyz'
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = '1708'
+app.config['MYSQL_DB'] = 'db'
+
+mysql = MySQL(app)
+
+# Define fyers globally
+fyers = None
+
+def get_fyers_instance():
+    with open("access.txt", 'r') as r:
+        access_token = r.read()
+
+    client_id = "8BCSF49KKK-100"
+    return fyersModel.FyersModel(token=access_token, log_path=os.getcwd(), client_id=client_id)
+
+def fetch_and_process_data(fyers, symbol, range_from, range_to):
+    data = {
+        "symbol": symbol,
+        "resolution": "1",
+        "date_format": "1",
+        "range_from": range_from,
+        "range_to": range_to,
+        "cont_flag": "1"
+    }
+
+    sdata = fyers.history(data)
+    sdata = pd.DataFrame(sdata['candles'])
+    sdata.columns = ['date', 'open', 'high', 'low', 'close', 'volume']
+    sdata['date'] = pd.to_datetime(sdata['date'], unit='s')
+    sdata.date = (sdata.date.dt.tz_localize('UTC').dt.tz_convert('Asia/Kolkata'))
+    sdata['date'] = sdata['date'].dt.tz_localize(None)
+    sdata = sdata.set_index('date')
+
+    return sdata
+
+def calculate_price_difference(sdata):
+    candle_920 = sdata.between_time('09:20', '09:21').iloc[0]
+    candle_930 = sdata.between_time('09:30', '09:31').iloc[0]
+
+    price_difference = candle_920['open'] - candle_930['open']
+    absolute_price_difference = abs(price_difference)
+    return absolute_price_difference
+
+def generate_auth_code():
+    session = fyersModel.SessionModel(
+        client_id=client_id,
+        secret_key=secret_key,
+        redirect_uri=redirect_uri,
+        response_type=response_type,
+        grant_type='authorization_code'
+    )
+    driver = webdriver.Chrome()
+    driver.get(session.generate_authcode())
+    time.sleep(30)
+    new_url = driver.current_url
+    auth_code = new_url[new_url.index('auth_code=') + 10:new_url.index('&state')]
+    driver.quit()
+    return auth_code
+
+@app.route('/')
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    message = ''
+    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+        email = request.form['email']
+        password = request.form['password']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM user WHERE email = %s AND password = %s', (email, password,))
+        user = cursor.fetchone()
+        if user:
+            session['loggedin'] = True
+            session['name'] = user['name']
+            session['email'] = user['email']
+            message = 'Logged in successfully!'
+            return render_template('access.html', message=message)
+        else:
+            message = 'Please enter correct email/password!'
+    return render_template('login.html', message=message)
+
+@app.route('/logout')
+def logout():
+    session.pop('loggedin', None)
+    session.pop('email', None)
+    return redirect(url_for('login'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    message = ''
+    if request.method == 'POST' and 'name' in request.form and 'password' in request.form and 'email' in request.form:
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM user WHERE email = %s', (email,))
+        account = cursor.fetchone()
+        if account:
+            message = 'Account already exists!'
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            message = 'Invalid email address!'
+        elif not name or not password or not email:
+            message = 'Please fill out the form!'
+        else:
+            cursor.execute('INSERT INTO user (name, email, password) VALUES (%s, %s, %s)', (name, email, password,))
+            mysql.connection.commit()
+            message = 'You have successfully registered!'
+    elif request.method == 'POST':
+        message = 'Please fill out the form!'
+
+    return render_template('register.html', message=message)
+
+@app.route('/generate_token')
+def generate_token():
+    auth_code = generate_auth_code()
+    session = fyersModel.SessionModel(
+        client_id=client_id,
+        secret_key=secret_key,
+        redirect_uri=redirect_uri,
+        response_type=response_type,
+        grant_type='authorization_code'
+    )
+    session.set_token(auth_code)
+    response = session.generate_token()
+    access_token = response["access_token"]
+
+    with open("access.txt", 'w') as file:
+        file.write(access_token)
+
+    return render_template('index.html', message="Access token is generated!")
+
+@app.route('/stop_loss_calculator')
+def stop_loss_calculator():
+    return render_template('sl.html')
+
+with open("access.txt", 'r') as r:
+    access_token = r.read()
+    
+client_id = "8BCSF49KKK-100"
+fyers = fyersModel.FyersModel(token=access_token, log_path=os.getcwd(), client_id=client_id)
+
+@app.route('/execute', methods=['POST'])
+def execute():
+    try:
+        # Execute Fyers API code
+        data = request.json
+        transactionType = data['transactionType']
+        instrument = data['instrument']
+        quantity = data['quantity']
+
+        side = 1 if transactionType == 'buy' else -1
+        data = {
+            "symbol":instrument,
+            "qty": quantity,
+            "type": 2,
+            "side": side,
+            "productType": "INTRADAY",
+            "limitPrice": 0,
+            "stopPrice": 0,
+            "validity": "DAY",
+            "disclosedQty": 0,
+            "offlineOrder": False,
+            "orderTag": "tag1"
+        }
+        response = fyers.place_order(data=data)
+
+        # Log response
+        print(response)
+
+        return jsonify({"status": "success", "message": "Order executed successfully", "response": response})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+    
+
+@app.route('/position_sizing_calculator')
+def position_sizing_calculator():
+    return render_template('ps.html')
+
+@app.route('/delta_calculator', methods=['GET', 'POST'])
+def delta_calculator():
+    global fyers  # Ensure fyers is accessible globally
+    if request.method == 'POST':
+        instrument = request.form['instrument']
+        contract = request.form['contract']
+        expiry = request.form['date']
+        strike_price = request.form['strikePrice']
+        option_type = request.form['optionType']
+        
+        # Splitting the expiry date into day, month, and year
+        expiry_date = dt.datetime.strptime(expiry, '%Y-%m-%d')
+        day = "{:02d}".format(expiry_date.day)  # Ensuring day is two digits
+        year = str(expiry_date.year)[-2:]  # Storing only last two digits of the year
+        
+        # Check if the expiry is weekly or monthly
+        if contract == 'weekly':
+            weekly_expiry_date = expiry_date
+        else:
+            monthly_expiry_date = expiry_date
+        
+        # Mapping month to the specified format
+        if contract == 'weekly':
+            month_mapping = {
+                1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6',
+                7: '7', 8: '8', 9: '9', 10: 'O', 11: 'N', 12: 'D'
+            }
+        else:  # Monthly contract
+            month_mapping = {
+                1: 'JAN', 2: 'FEB', 3: 'MAR', 4: 'APR', 5: 'MAY', 6: 'JUN',
+                7: 'JUL', 8: 'AUG', 9: 'SEP', 10: 'OCT', 11: 'NOV', 12: 'DEC'
+            }
+        
+        if contract == 'weekly':
+            month = str(weekly_expiry_date.month)  # For weekly expiry, month is represented by the number
+        else:
+            month = month_mapping[monthly_expiry_date.month]  # Getting the mapped value for the month
+        
+        if instrument == 'Nifty':
+            symbol1 = "NSE:NIFTY50-INDEX"
+            sym="NSE:NIFTY"
+        elif instrument == 'BankNifty':
+            symbol1 = "NSE:NIFTYBANK-INDEX"
+            sym="NSE:BANKNIFTY"
+        elif instrument == 'Finfity':
+            symbol1 = "NSE:FINNIFTY-INDEX"
+            sym="NSE:FINNIFTY"
+        elif instrument == 'MidcapNifty':
+            symbol1 = "NSE:MIDCPNIFTY-INDEX"
+            sym="NSE:MIDCPNIFTY"
+        elif instrument == 'Sensex':
+            symbol1 = "BSE:SENSEX-INDEX"
+            sym="BSE:SENSEX"
+
+     
+        p = "2024-06-18"
+        data1 = fetch_and_process_data(fyers, symbol1, p , p)
+        delta1 = calculate_price_difference(data1)
+
+        if contract == 'weekly':
+            symbol3 =   sym + str(year) + str(month) + str(day) + str(strike_price) + option_type 
+            symbol3 = str(symbol3)
+        else:
+            symbol3 = sym + str(year) + str(month) + str(strike_price) + option_type
+            symbol3 = str(symbol3)
+        
+        data2 = fetch_and_process_data(fyers, symbol3, p , p)
+        delta2 = calculate_price_difference(data2)
+        
+        delta = round(delta2 / delta1, 2)
+        
+        if contract == 'weekly':
+            return render_template('delta.html', delta=delta , instrument=instrument , strike_price=strike_price , option_type=option_type)
+        else:
+            return render_template('delta.html', delta=delta, instrument=instrument , strike_price=strike_price , option_type=option_type)
+    return render_template('delta.html')  # Render the initial form
+
+
+def get_data():
+    # Load the data from the Excel file
+    df = pd.read_excel('data.xlsm', engine='openpyxl')
+
+    # Extract NIFTY 50 data
+    nifty_data = df[df['Column1.symbol'] == 'NIFTY 50'].iloc[0]
+
+    # Filter out NIFTY 50 from the main DataFrame
+    df = df[df['Column1.symbol'] != 'NIFTY 50']
+
+    # Sort the data to find the top gainers and losers
+    top_gainers = df.nlargest(3, 'Column1.pChange')
+    top_losers = df.nsmallest(3, 'Column1.pChange')
+
+    gainers = top_gainers[['Column1.symbol', 'Column1.lastPrice', 'Column1.pChange']].to_dict(orient='records')
+    losers = top_losers[['Column1.symbol', 'Column1.lastPrice', 'Column1.pChange']].to_dict(orient='records')
+
+    return gainers, losers, nifty_data
+
+@app.route('/api/data')
+def data():
+    gainers, losers, nifty_data = get_data()
+    nifty_info = {
+        'symbol': nifty_data['Column1.symbol'],
+        'lastPrice': nifty_data['Column1.lastPrice'],
+        'pChange': nifty_data['Column1.pChange']
+    }
+    return jsonify({'gainers': gainers, 'losers': losers, 'nifty': nifty_info})
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+sidebar - profile: 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskWiseTrading</title>
+
+    <link  href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/access.css') }}">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <div class="top"> 
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}">
+                    <h2>Risk Wise <span class="danger"> Trading</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="#" class="active">
+                    <span class="material-icons-sharp">grid_view</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="#" >
+                    <span class="material-icons-sharp">token</span>
+                    <h3>Access Token</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">candlestick_chart</span>
+                    <h3>Delta Calculator</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">warning</span>
+                    <h3>Stop Loss Calculator</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">production_quantity_limits</span>
+                    <h3>Quantity Calculator</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">query_stats</span>
+                    <h3>Trade Analysis</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">manage_search</span>
+                    <h3>Option Chain Analysis</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">hiking</span>
+                    <h3>Backtesting Tools</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">smart_toy</span>
+                    <h3>Algo Trading</h3>
+                </a><a href="#">
+                    <span class="material-icons-sharp">waterfall_chart</span>
+                    <h3>Stock Screener</h3>
+                </a>
+                <a href="{{ url_for('logout') }}">
+                    <span class="material-icons-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <main>
+            
+        </main>  
+    </div>   
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    
+</body>
+</html>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+
+:root{
+    --color-primary: #7380ec;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #363949;
+    --color-light: rgba(132,139,200,0.18);
+    --color-primary-variant: #111e88;
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+.dark-theme-variables {
+    --color-background: #181a1e;
+    --color-white: #202528;
+    --color-dark: #edeffd;
+    --color-dark-variant: #a3bdcc;
+    --color-light: rgba(0, 0, 0, 0.4);
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    appearance: none;
+    border: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 14px;
+}
+
+body{
+    width: 100vw;
+    height: 100vh;
+    font-family: poppins, sans-serif;
+    font-size: 0.88rem;
+    background: var(--color-background);
+    user-select: none;
+    overflow-x: hidden;
+    color: var(--color-dark);
+}
+
+.container{
+    display: grid;
+    width: 96%;
+    margin: 0 auto;
+    gap: 1.8rem;
+    grid-template-columns: 14rem auto 21rem;
+}
+
+a{
+    color: var(--color-dark);
+}
+
+img{
+    display: block;
+    width: 100%;
+}
+
+h2{
+    font-size: 1.4rem;
+}
+
+h3{
+    font-size: 0.87rem;
+}
+
+h4{
+    font-size: 0.8rem;
+}
+
+h5{
+    font-size: 0.77rem;
+}
+
+small{
+    font-size: 0.75rem;
+}
+
+.profile-photo{
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.text-muted{
+    color: var(--color-info-dark);
+}
+
+p{
+    color: var(--color-dark-variant);
+}
+
+b{
+    color: var(--color-dark);
+}
+
+.primary{
+    color: var(--color-primary);
+}
+
+.danger{
+    color: var(--color-danger);
+}
+
+.succes{
+    color: var(--color-success);
+}
+
+.warning{
+    color: var(--color-warning);
+}
+
+aside{
+    height: 100vh;
+
+}
+
+aside .top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.4rem;
+}
+
+aside .logo{
+    display: flex;
+    gap: 0.8rem;
+}
+
+aside .logo img{
+    margin-top: 1rem;
+    width: 2rem;
+    height: 2rem;
+}
+
+aside .close{
+    display: none;
+}
+
+aside .sidebar{
+    display: flex;
+    flex-direction: column;
+    height: 86vh;
+    position: relative;
+    top: 3rem;
+}
+
+aside h3{
+    font-weight: 500;
+}
+
+aside .sidebar a {
+    display: flex;
+    color: var(--color-info-dark);
+    margin-left: 1rem;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    height: 3.7rem;
+    transition: all 300ms ease;
+}
+
+aside .sidebar a span{
+    font-size: 1.6rem;
+    transition: all 300ms ease;
+}
+
+aside .sidebar a:last-child{
+    position: absolute;
+    bottom: 2rem;
+    width: 100%;
+}
+
+aside .sidebar a.active{
+    background: var(--color-light);
+    color: var(--color-primary);
+    margin-left: 0;
+}
+
+aside .sidebar a.active:before{
+    content: "";
+    width: 6px;
+    height: 100%;
+    background: var(--color-primary);
+}
+
+aside .sidebar a.active span{
+    color: var(--color-primary);
+    margin-left: calc(1rem - 3px);
+}
+
+aside .sidebar a:hover{
+    color: var(--color-primary);
+}
+
+aside .sidebar a:hover span{
+    margin-left: 1rem;
+}
+
+
+
+
+<div class="container">
+    <div class="header">
+        <div>
+            <button>ADD BROKER</button>
+            <button>REFRESH</button>
+        </div>
+        <button>OPEN 1CLIQ WINDOW</button>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Broker</th>
+                    <th>Broker ID</th>
+                    <th>Name Tag</th>
+                    <th>App ID</th>
+                    <th>App Secret Key</th>
+                    <th>Status</th>
+                    <th>Last Token Generated At</th>
+                    <th>Generate Token</th>
+                    <th>Action</th>
+                    <th>Added At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Flat Trade</td>
+                    <td>FT****02</td>
+                    <td>1 CLIQ</td>
+                    <td>480********b3e</td>
+                    <td>********b65a</td>
+                    <td><span class="status active">ACTIVE</span></td>
+                    <td>07-03-24, 09:44</td>
+                    <td><span class="generate-token">Click to Generate Token</span></td>
+                    <td class="actions">
+                        <span class="material-icons green">play_arrow</span>
+                        <span class="material-icons red">cancel</span>
+                    </td>
+                    <td>02-01-24, 15:00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination">
+        <div>
+            Items per page:
+            <select>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <div class="page-info">
+            <span>1-1 of 1</span>
+        </div>
+        <div class="page-controls">
+            <span class="material-icons">first_page</span>
+            <span class="material-icons">chevron_left</span>
+            <span class="material-icons">chevron_right</span>
+            <span class="material-icons">last_page</span>
+        </div>
+    </div>
+</div>
+
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.header button{
+    padding: 0.5rem 1rem;
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-radius: var(--border-radius-1);
+    cursor: pointer;
+    transition: background 300ms ease;
+}
+
+.header button:hover{
+    background: var(--color-primary-variant);
+}
+
+.table-container{
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    overflow-x: auto;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead{
+    background: var(--color-info-light);
+}
+
+thead th{
+    padding: var(--padding-1);
+    text-align: left;
+}
+
+tbody tr{
+    border-bottom: 1px solid var(--color-info-light);
+}
+
+tbody td{
+    padding: var(--padding-1);
+}
+
+tbody td .status{
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--border-radius-1);
+    text-align: center;
+    color: var(--color-white);
+}
+
+tbody td .status.active{
+    background: var(--color-success);
+}
+
+tbody td .generate-token{
+    cursor: pointer;
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+tbody td .actions span{
+    cursor: pointer;
+    margin-right: 0.5rem;
+}
+
+tbody td .actions .green{
+    color: var(--color-success);
+}
+
+tbody td .actions .red{
+    color: var(--color-danger);
+}

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskWiseTrading</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/access.css') }}">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <div class="top"> 
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}">
+                    <h2><span class="danger">Risk</span><span class="success">Wise</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="{{ url_for('index') }}">
+                    <span class="material-icons-sharp">grid_view</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="#" class="active">
+                    <span class="material-icons-sharp">token</span>
+                    <h3>Access Token</h3>
+                </a>
+                <a href="{{url_for('delta_calculator')}}">
+                    <span class="material-icons-sharp">candlestick_chart</span>
+                    <h3>Delta Calculator</h3>
+                </a>
+                <a href="{{ url_for('stop_loss_calculator') }}">
+                    <span class="material-icons-sharp">warning</span>
+                    <h3>Stop Loss Calculator</h3>
+                </a>
+                <a href="{{ url_for('position_sizing_calculator') }}">
+                    <span class="material-icons-sharp">production_quantity_limits</span>
+                    <h3>Quantity Calculator</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">query_stats</span>
+                    <h3>Trade Analysis</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">hiking</span>
+                    <h3>Backtesting Tools</h3>
+                </a>
+
+                <a href="#">
+                    <span class="material-icons-sharp">show_chart</span>
+                    <h3>Option Simulator</h3>
+                </a>
+
+                <a href="#">
+                    <span class="material-icons-sharp">smart_toy</span>
+                    <h3>Algo Trading</h3>
+                </a>
+                <a href="{{ url_for('logout') }}">
+                    <span class="material-icons-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <main>
+            <div class="header">
+                <h1>Broker Integration</h1>
+                <div>
+                    <button>Add Broker</button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Broker</th>
+                            <th>Broker ID</th>
+                            <th>Name Tag</th>
+                            <th>App ID</th>
+                            <th>App Secret Key</th>
+                            <th>Status</th>
+                            <th>Last Token Generated At</th>
+                            <th>Generate Token</th>
+                            <th>Action</th>
+                            <th>Added At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>FYERS</td>
+                            <td>FT****02</td>
+                            <td>Project</td>
+                            <td>480********b3e</td>
+                            <td>********b65a</td>
+                            <td><span class="status active">ACTIVE</span></td>
+                            <td>07-03-24, 09:44</td>
+                            <td>
+                                <div class="token">    
+                                    <div>
+                                        <form action="/generate-token" class="generate-token" method="post">
+                                            <button type="submit">Generate Token</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="actions">
+                                <span class="material-icons-sharp success">play_arrow</span>
+                                <span class="material-icons-sharp danger">cancel</span>
+                            </td>
+                            <td>02-01-24, 15:00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>

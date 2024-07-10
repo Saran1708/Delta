@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskWiseTrading</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sl.css') }}">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <div class="top"> 
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}">
+                    <h2><span class="danger">Risk</span><span class="succes">Wise</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="{{ url_for('index') }}" >
+                    <span class="material-icons-sharp">grid_view</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="{{ url_for('generate_token_page') }}">
+                    <span class="material-icons-sharp">token</span>
+                    <h3>Access Token</h3>
+                </a>
+                <a href="{{ url_for('delta_calculator') }}" >
+                    <span class="material-icons-sharp">candlestick_chart</span>
+                    <h3>Delta Calculator</h3>
+                </a>
+                <a href="#" class="active">
+                    <span class="material-icons-sharp">warning</span>
+                    <h3>Stop Loss Calculator</h3>
+                </a>
+                <a href="{{ url_for('position_sizing_calculator') }}">
+                    <span class="material-icons-sharp">production_quantity_limits</span>
+                    <h3>Quantity Calculator</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">query_stats</span>
+                    <h3>Trade Analysis</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">hiking</span>
+                    <h3>Backtesting Tools</h3>
+                </a>
+
+                <a href="#">
+                    <span class="material-icons-sharp">show_chart</span>
+                    <h3>Option Simulator</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">smart_toy</span>
+                    <h3>Algo Trading</h3>
+                </a>
+                <a href="{{ url_for('logout') }}">
+                    <span class="material-icons-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <main>
+            <div>   
+                <div class="stop-loss-calculator">
+                    <h1>Stop Loss Calculator</h1>
+                    <br><br>
+                    <div class="form-group">
+                        <label for="totalCapital">Total Capital:</label>
+                        <input type="number" id="totalCapital" >
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="riskPercentage">Risk Percentage:</label>
+                        <input type="number" id="riskPercentage" >
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="delta">Delta:</label>
+                        <input type="number" id="delta" >
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="underlyingSLPts">Underlying SL Points:</label>
+                        <input type="number" id="underlyingSLPts" >
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="instrumentType">Instrument Type:</label>
+                        <select id="instrumentType">
+                            <option value="CNXFINANCE">CNXFINANCE</option>
+                            <option value="NIFTY_MID_SELECT">NIFTY_MID_SELECT</option>
+                            <option value="NIFTY">NIFTY</option>
+                            <option value="BANKNIFTY">BANKNIFTY</option>
+                        </select>
+                    </div>
+                    <br>
+                    <button onclick="calculateStopLossAndLotSize()">Calculate</button>
+                    <br>
+                    <center>
+                        <b id="calculatedStopLoss"></b>
+                        <b id="calculatedLotSize"></b>
+                        <b id="maxLoss"></b>
+                    </center>
+                </div>   
+            </div>  
+        </main>
+    </div> 
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script>
+        function calculateStopLossAndLotSize() {
+            var totalCapital = parseFloat(document.getElementById('totalCapital').value);
+            var riskPercentage = parseFloat(document.getElementById('riskPercentage').value);
+            var delta = parseFloat(document.getElementById('delta').value);
+            var underlyingSLPts = parseFloat(document.getElementById('underlyingSLPts').value);
+            var instrumentType = document.getElementById('instrumentType').value;
+    
+            if (isNaN(totalCapital) || isNaN(riskPercentage) || isNaN(delta) || isNaN(underlyingSLPts)) {
+                alert("Please enter valid numbers in all fields.");
+                return;
+            }
+    
+            // Calculate New SL in Premium Points
+            var newSLPremiumPoints = underlyingSLPts * delta;
+    
+            // Calculate Maximum Loss
+            var maxLoss = totalCapital * (riskPercentage / 100);
+    
+            // Calculate the Number of Lots
+            var lotSize;
+            switch (instrumentType) {
+                case "CNXFINANCE":
+                    lotSize = 40;
+                    break;
+                case "NIFTY_MID_SELECT":
+                    lotSize = 75;
+                    break;
+                case "NIFTY":
+                    lotSize = 50;
+                    break;
+                case "BANKNIFTY":
+                    lotSize = 15;
+                    break;
+                default:
+                    alert("Please select a valid instrument type.");
+                    return;
+            }
+    
+            var numberOfLots = Math.floor(maxLoss / (newSLPremiumPoints * lotSize));
+            var finalMaxLoss = numberOfLots * newSLPremiumPoints * lotSize;
+    
+            // Display Results
+            document.getElementById('calculatedStopLoss').innerHTML = "New SL (Premium Points): " + newSLPremiumPoints.toFixed(2);
+            document.getElementById('calculatedLotSize').innerHTML = "Number of Lots: " + numberOfLots;
+            document.getElementById('maxLoss').innerHTML = "Final Max Loss: " + finalMaxLoss.toFixed(2);
+        }
+    </script>   
+</body>
+</html>
